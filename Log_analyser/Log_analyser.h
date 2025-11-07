@@ -4,6 +4,7 @@
 #pragma once
 
 #include <iostream>
-#include "analyser.h"
+#include "interactive_menu.h"
+#include "console_mode.h"
 #include <Windows.h>
 // TODO: установите здесь ссылки на дополнительные заголовки, требующиеся для программы.

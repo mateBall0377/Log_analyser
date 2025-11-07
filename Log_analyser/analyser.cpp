@@ -28,11 +28,14 @@ void Message::parse_time()
 
 void Message::parse_code()
 {
-	if (raw_line[10] == 'I')code = INFO;
-	if (raw_line[10] == 'D')code = DEBUG;
-	if (raw_line[10] == 'W')code = WARNING;
-	if (raw_line[10] == 'E')code = ERROR;
-	if (raw_line[10] == 'F')code = FATAL;
+	switch (raw_line[10]) 
+	{
+		case 'I': code = INFO; break;
+		case 'D': code = DEBUG; break;
+		case 'W': code = WARNING; break;
+		case 'E': code = ERROR; break;
+		case 'F': code = FATAL; break;
+	}
 }
 
 void Message::parse_modulename()
@@ -72,50 +75,43 @@ std::string File::get_badstat()const
 	int counterror = 0;
 	for (int i= 0; i < msgs.size(); i++)
 	{
-		if (msgs[i].get_code() == WARNING) countwarnings++;
-		if (msgs[i].get_code() == ERROR) counterror++;
-		if (msgs[i].get_code() == FATAL) countfatal++;
-
+		switch (msgs[i].get_code())
+		{
+		case WARNING:countwarnings++;break;
+		case ERROR: counterror++; break;
+		case FATAL:countfatal++; break;
+		}
 	}
 
-	stat << "In file " << filename << std::endl;
-	stat << " WARNING: " << countwarnings << std::endl;
-	stat << " FATAL: " << countfatal << std::endl;
-	stat << " ERROR: " << counterror << std::endl;
+	stat << "In file " << filename << std::endl
+	<< " WARNING: " << countwarnings << std::endl
+	<< " FATAL: " << countfatal << std::endl
+	<< " ERROR: " << counterror << std::endl;
 	return stat.str();
 }
 
-static bool is_endbiggerstart(const std::tm& timestart, const std::tm& timeend)
+
+static int FtmTsec(const tm& t) 
 {
-	if (timestart.tm_hour < timeend.tm_hour)return true;
-	if (timestart.tm_hour > timeend.tm_hour)return false;
-	if (timestart.tm_min < timeend.tm_min)return true;
-	if (timestart.tm_min > timeend.tm_min)return false;
-	if (timestart.tm_sec < timeend.tm_sec)return true;
-	if (timestart.tm_sec > timeend.tm_sec)return false;
-	return false;
+	return  t.tm_hour * 3600 + t.tm_min * 60 + t.tm_sec;
 }
 
-
-static bool is_in_duration(std::tm timestart, std::tm timeend, const std::tm& time_point)
+static bool is_in_duration(const std::tm& start, const std::tm& end, const std::tm& point)
 {
+	auto start_sec = FtmTsec(start);
+	auto end_sec = FtmTsec(end);
+	auto point_sec = FtmTsec(point);
 
-	bool flag = false;
-	bool flag_in_dur = false;
-	if (!is_endbiggerstart(timestart, timeend))
+	if (start_sec <= end_sec) 
 	{
-		flag = true;
-		std::tm temp = timeend;
-		timeend = timestart;
-		timestart = temp;
+		return point_sec >= start_sec && point_sec <= end_sec;
 	}
-
-	if (is_endbiggerstart(timestart, time_point) && is_endbiggerstart(time_point, timeend))flag_in_dur = true;
-	//if (flag_in_dur && !flag)return true;
-	//if (!flag_in_dur && flag)return true;
-	//return false;
-	return flag_in_dur ^ flag;
+	else 
+	{
+		return point_sec >= start_sec || point_sec <= end_sec;
+	}
 }
+
 
 std::string File::get_findtime(const std::tm& timestart, const std::tm& timeend)const
 {
@@ -255,5 +251,4 @@ void LogHandler::write_last_result(std::string filename)
 {
 	std::ofstream fs(filename);
 	fs << LastResult;
-	fs.close();
 }

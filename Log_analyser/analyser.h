@@ -1,11 +1,5 @@
 #pragma once 
-#include <vector>
-#include <string>
-#include <iostream>
-#include <ctime>
-#include <fstream>
-#include <sstream>
-#include <filesystem>
+#include "common.h"
 
 enum codes_messages
 {
