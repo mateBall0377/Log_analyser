@@ -5,4 +5,5 @@
 
 #include <iostream>
 #include "analyser.h"
+#include <Windows.h>
 // TODO: установите здесь ссылки на дополнительные заголовки, требующиеся для программы.

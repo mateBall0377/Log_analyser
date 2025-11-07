@@ -5,6 +5,7 @@
 #include <ctime>
 #include <fstream>
 #include <sstream>
+#include <filesystem>
 
 enum codes_messages
 {
@@ -69,15 +70,18 @@ class LogHandler
 private:
 	std::vector<File> files;
 	std::string DirName;
-	
+	std::string LastResult;
 public:
 	LogHandler() = delete;
-	LogHandler(std::string dirname) {};
+	LogHandler(std::string dirname);
 	~LogHandler() {};
 
-	void get_stat() {};
-	void find_time(std::tm time) {};
-	void find_str(std::string str) {};
-	void write_last_result(std::string filename) {};
+	void get_stat();
+	void findbytime(const std::tm& timestart, const std::tm& timeend);
+	void findbystr(const std::string& str);
+	void findbymodule(const std::string& str);
+	void findbytype(codes_messages code);
+
+	void write_last_result(std::string filename);
 
 };
