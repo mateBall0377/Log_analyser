@@ -17,12 +17,14 @@ void console_mode(LogHandler& handler, int argc, char** argv)
         }
         else if (arg == "--find-time") 
         {   
-            std::string start_str, end_str;
+            std::string start_str = argv[++i], end_str=argv[++i];
             std::tm start_time = {}, end_time = {};
-            if (parse_time(start_str, start_time) && parse_time(end_str, end_time)) {
+            if (parse_time(start_str, start_time) && parse_time(end_str, end_time)) 
+            {
                 handler.findbytime(start_time, end_time);
             }
-            else {
+            else 
+            {
                 std::cout << "Error in time format\n";
             }
             has_output = true;
