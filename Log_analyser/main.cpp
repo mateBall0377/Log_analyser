@@ -1,6 +1,6 @@
-﻿#include "Log_analyser.h"
-
-
+﻿#include <iostream>
+#include <Windows.h>
+#include "core/LogHandler.h"
 
 int main(int argc, char** argv) {
     if (argc < 2) {
@@ -13,8 +13,8 @@ int main(int argc, char** argv) {
 
     try {
         LogHandler handler(dirname);
-        if (argc == 2)interactive_mode(handler);
-        else console_mode(handler, argc, argv);
+        handler.ApplyArgs(argc, argv);
+        handler.PrintResult();
     }
     catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
