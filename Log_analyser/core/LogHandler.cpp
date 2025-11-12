@@ -10,6 +10,7 @@ LogHandler::LogHandler(std::string dirname) {
     flag_stat_ = false;
     flag_filter_ = false;
     file_output_ = false;
+    SortByTime();
 }
 
 void LogHandler::SortByTime() {
@@ -18,7 +19,6 @@ void LogHandler::SortByTime() {
 
 void LogHandler::ApplyArgs(int argc, char** argv) {
     CliArgsParser args(argc, argv);
-
     if (args.IsFlagExist(kFlagOut)) {
         file_output_ = true;
         output_.open(args.GetValueFlag(kFlagOut));
@@ -56,6 +56,22 @@ void LogHandler::ApplyArgs(int argc, char** argv) {
         throw std::runtime_error("Error: not found " +
             (args.IsFlagExist(kFlagMaxTime) ? kFlagMinTime : kFlagMaxTime));
     }
+    if (args.IsFlagExist(kFlagMaxDate) && args.IsFlagExist(kFlagMinDate)) {
+        std::string start_str = args.GetValueFlag(kFlagMinDate);
+        std::string end_str = args.GetValueFlag(kFlagMaxDate);
+        std::time_t start_time = ParseDateToTimeT(start_str);
+        std::time_t end_time = ParseDateToTimeT(end_str);
+        
+        FilterByTime(start_time, end_time);
+
+
+    }
+    if (args.IsFlagExist(kFlagMaxDate) ^ args.IsFlagExist(kFlagMinDate)) {
+        throw std::runtime_error("Error: not found " +
+            (args.IsFlagExist(kFlagMaxDate) ? kFlagMinDate : kFlagMaxDate));
+    }
+
+
 }
 
 void LogHandler::PrintResult() {
@@ -104,5 +120,15 @@ void LogHandler::EachFileFilterType(const std::vector<CodesMessages>& codes) {
     flag_filter_ = true;
     for (File& file : files_) {
         file.FilterType(codes);
+    }
+}
+
+void LogHandler::FilterByTime(time_t start_time, time_t end_time) {
+    for (size_t i = 0; i < files_.size(); i++) {
+        time_t tmp = files_[i].get_time();
+        if (!(tmp>start_time && tmp<end_time)) {
+            files_.erase(files_.begin() + i);
+            i--;
+        }
     }
 }

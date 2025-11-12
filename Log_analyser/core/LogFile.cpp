@@ -2,7 +2,7 @@
 
 void File::CalcTime() {
     std::string clear_filename = std::filesystem::path(filename_).filename().string();
-    std::tm time_struct;
+    std::tm time_struct = {}; 
 
     int start_date = StrChrBetter(clear_filename, '_', 1) + 1;
     int end_date = StrChrBetter(clear_filename, '_', 2);
@@ -15,8 +15,8 @@ void File::CalcTime() {
     time_struct.tm_min = std::stoi(time_f.substr(2, 2));
     time_struct.tm_sec = std::stoi(time_f.substr(4, 2));
 
-    time_struct.tm_year = std::stoi(date.substr(0, 4));
-    time_struct.tm_mon = std::stoi(date.substr(4, 2));
+    time_struct.tm_year = std::stoi(date.substr(0, 4)) - 1900;
+    time_struct.tm_mon = std::stoi(date.substr(4, 2)) - 1;    
     time_struct.tm_mday = std::stoi(date.substr(6, 2));
 
     time_struct.tm_isdst = -1;

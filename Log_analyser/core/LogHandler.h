@@ -17,6 +17,7 @@ private:
 	void EachFileFilterStr(const std::string& str);
 	void EachFileFilterType(const std::vector<CodesMessages>& codes);
 	void SortByTime();
+	void FilterByTime(time_t start_time, time_t end_time);
 
 public:
 	LogHandler() = delete;

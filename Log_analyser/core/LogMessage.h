@@ -5,7 +5,7 @@
 
 class Message {
 private:
-	std::tm time_;
+	std::tm time_;	
 	CodesMessages code_;
 	std::string name_module_;
 	std::string data_;

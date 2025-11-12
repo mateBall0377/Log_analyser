@@ -26,6 +26,7 @@ public:
     std::string GetBadStat() const;
     std::string GetMessages() const;
 
+    std::string get_filename() { return filename_; }
     time_t get_time() const { return time_; }
     std::vector<Message>& get_vec_msg() { return messages_; }
 };

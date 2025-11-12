@@ -17,3 +17,5 @@ const std::string kFlagType = "--type";
 const std::string kFlagStr = "--str";
 const std::string kFlagStat = "--stat";
 const std::string kFlagOut = "--output";
+const std::string kFlagMinDate = "--min_date";
+const std::string kFlagMaxDate = "--max_date";

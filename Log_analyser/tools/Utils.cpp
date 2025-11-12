@@ -31,3 +31,20 @@ bool IsInDuration(const std::tm& start, const std::tm& end, const std::tm& point
         return point_sec >= start_sec || point_sec <= end_sec;
     }
 }
+
+time_t ParseDateToTimeT(const std::string& date_str) {
+    std::tm time_struct = {};
+    std::istringstream ss(date_str);
+    ss >> std::get_time(&time_struct, "%Y:%m:%d");
+
+    if (ss.fail()) {
+        throw std::invalid_argument("Invalid date format. Expected YYYY:MM:DD");
+    }
+
+    time_struct.tm_hour = 0;
+    time_struct.tm_min = 0;
+    time_struct.tm_sec = 0;
+    time_struct.tm_isdst = -1;
+
+    return std::mktime(&time_struct);
+}
